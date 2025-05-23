@@ -6,12 +6,12 @@ const SECRET_KEY = 'chave_api_gfp'
 
 class rotasUsuarios{
     static async novoUsuario(req, res){
-        const {nome, email, senha, tipo_acesso, ativo} = req.body
+        const {nome, email, senha, tipo_acesso} = req.body
 
         const saltRounds = 10
         const senhaCriptografada = await bcrypt.hash(senha, saltRounds)
         try{
-            const usuario = await BD.query(`INSERT INTO usuarios(nome, email, senha, tipo_acesso, ativo) VALUES($1, $2, $3, $4, $5) `,[nome, email, senhaCriptografada, tipo_acesso, ativo])
+            const usuario = await BD.query(`INSERT INTO usuarios(nome, email, senha, tipo_acesso) VALUES($1, $2, $3, $4) `,[nome, email, senhaCriptografada, tipo_acesso])
 
             res.status(201).json("Usuario Cadastrado")
 
@@ -25,38 +25,40 @@ class rotasUsuarios{
         const { email, senha } = req.body
 
         try {
-            const resultado = await BD.query('SELECT id_usuario, nome, email, senha FROM usuarios WHERE email = $1', [email])
+            const resultado = await BD.query(`SELECT * FROM usuarios WHERE email = $1 and ativo = true`, [email]) //'SELECT id_usuario, nome, email, senha FROM usuarios WHERE email = $1', [email]
             if (resultado.rows.length === 0) {
-                return res.status(401).json({message: 'Email e senha inválidos'})
+                return res.status(401).json({message: 'Email ou senha inválidos'})
             }
             const usuario = resultado.rows[0]
             const senhaValida = await bcrypt.compare(senha, usuario.senha)
 
             if(!senhaValida) {
-                return res.status(401).json('Email ou senha invalido')
+                return res.status(401).json({mensagem:'Senha incorreta'})
             }
 
             // Gerar um novo token para usuarios
             const token = jwt.sign(
-                // Payload
-                {id_usuario: usuario.id_usuario, nome: usuario.nome, email: usuario.email},
-                // Signature
+                {id: usuario.id_usuario, nome: usuario.nome, email: usuario.email},
                 SECRET_KEY,
-                {expiresIn: '1h'}
+                //{expiresIn: '1h'}
             )
+            return res.status(200).json({
+                token, 
+                id_usuario: usuario.id_usuario, 
+                nome: usuario.nome, 
+                email: usuario.email, 
+                tipo_acesso: usuario.tipo_acesso})
 
-            res.status(200).json({message: 'Login realizado com sucesso', token})
-            //res.status(200).json({message: 'Login realizado com sucesso', usuario})
         } catch(error) {
-            console.error('Erro ao realizar login: ', error)
-            return res.status(500).json({message: 'Erro ao realizar login: ', error: error.message})
+            console.error("Erro ao logar", error)
+            res.status(500).json({message:"Erro ao logar", error: error.mensagem})
         }
     }
 
     static async listarUsuarios(req, res){
         try{
             // const usuarios = await Usuario.listar() // Chamar o metodo listar na models usuario
-            const usuarios = await BD.query("SELECT * FROM usuarios")
+            const usuarios = await BD.query("SELECT * FROM usuarios WHERE ativo = true")
             return res.status(200).json(usuarios.rows) // Retorna a lista de usuarios
         }catch(error){
             res.status(500).json({message:'Erro ao listar usuarios', error: error.message})
@@ -66,7 +68,7 @@ class rotasUsuarios{
     static async deletar(req, res){
         const { id_usuario } = req.params
         try{
-            const usuario = await BD.query('DELETE FROM usuarios WHERE id = $1', [id_usuario])
+            const usuario = await BD.query('UPDATE usuarios SET ativo = false WHERE id_usuario = $1', [id_usuario])
             return res.status(200).json({message: "Usuario deletado com sucesso"})
         }catch(error){
             res.status(500).json({message:"Erro ao deletar usuario", error:error.message})
@@ -84,12 +86,12 @@ class rotasUsuarios{
     }
 
     static async atualizarTodos(req, res){
-        const { id_usuario } = req.params;
-        const {nome, email, senha, tipo_acesso, ativo} = req.body
+        const {id_usuario} = req.params
+        const {nome, email, senha, tipo_acesso} = req.body
 
         try{
-            const usuario = await BD.query('UPDATE usuarios SET nome = $1 email = $2, senha = $3, tipo_acesso = $4, ativo = $5 WHERE id_usuario = $6 RETURNING *',
-                [nome, email, senha, tipo_acesso, ativo, id_usuario] // Comando SQL para atualizar o usuario
+            const usuario = await BD.query('UPDATE usuarios SET nome = $1, email = $2, senha = $3, tipo_acesso = $4 WHERE id_usuario = $5 RETURNING *',
+                [nome, email, senha, tipo_acesso, id_usuario] // Comando SQL para atualizar o usuario
             )
             res.status(200).json(usuario.rows)
         }catch(error){
@@ -97,9 +99,9 @@ class rotasUsuarios{
         }
     }
 
-    static async atualizar (res, req){
-        const  id_usuario  = req.params;
-        const {nome, email, senha, tipo_acesso, ativo} = req.body;
+    static async atualizar (req, res){
+        const  {id_usuario}  = req.params
+        const {nome, email, senha, tipo_acesso} = req.body
 
         try{
             // Inicializar arrays(vetores) para armazenar os campos e valores que seram atualizados
@@ -119,7 +121,9 @@ class rotasUsuarios{
 
             if( senha !== undefined){
                 campos.push(`senha = $${valores.length + 1}`)
-                valores.push(senha);
+                const saltRounds = 10
+                const senhaCriptografada = await bcrypt.hash(senha, saltRounds)
+                valores.push(senhaCriptografada);
             }
 
             if( tipo_acesso !== undefined){
@@ -127,10 +131,6 @@ class rotasUsuarios{
                 valores.push(tipo_acesso);
             }
 
-            if( ativo !== undefined){
-                campos.push(`ativo = $${valores.length + 1}`)
-                valores.push(ativo);
-            }
 
             if(campos.length === 0){
                 return res.status(400).json({message: 'Nenhum campo fornecido para atualização'})
@@ -158,13 +158,14 @@ class rotasUsuarios{
 export function autenticarToken(req, res, next){
     // Extrair to token o cabeçalho da requisição
     const token = req.headers['authorization']; // Bearer<token>
+    
 
     // Verificar se o token foi fornecido na requisição
     if(!token) return res.status(403).json({mensagem: 'Token não fornecido'})
 
     // Verificar a validade do token
     // jwt.verify que valida se o token é legitimo
-    jwt.verify(token.split('')[1], SECRET_KEY, (err, usuario) => {
+    jwt.verify(token.split(' ')[1], SECRET_KEY, (err, usuario) => {
         if(err) return res.status(403).json({mensagem: 'Token invalido'})
 
         // Se o token for valido, adiciona os dados do usuario(decodificado no token)
