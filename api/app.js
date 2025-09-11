@@ -16,10 +16,11 @@ testarConexao()
 app.use(cors())
 app.use(express.json())
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-// app.get('/', (req, res) => {
-//     res.send('API Funcionando!')
-// })
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.get('/', (req, res) => {
+    // res.send('API Funcionando!')
+    res.redirect('/api-docs');
+})
 
 // Rotas usuarios
 app.post('/usuarios', rotasUsuarios.novoUsuario)// ✅
@@ -42,10 +43,10 @@ app.delete('/categorias/:id_categoria', autenticarToken, rotasCategorias.deletar
 // Ratas Sub-Categorias
 app.post('/subCategorias', rotasSubCategorias.nova) // ✅
 app.get('/subCategorias', rotasSubCategorias.listar) // ✅
-app.get('/subCategorias/:id_subCategoria', rotasSubCategorias.listarPorID) // ❌
-app.patch('/subCategorias/:id_subCategoria', rotasSubCategorias.atualizar) // ❌
-// app.put('/subCategorias/:id_subCategoria', rotasSubCategorias.atualizarTodos)
-// app.delete('/subCategorias/:id_subCategoria', rotasSubCategorias.deletar)
+app.get('/subCategorias/:id_subcategoria', rotasSubCategorias.listarPorID) // ❌
+app.patch('/subCategorias/:id_subcategoria', rotasSubCategorias.atualizar) // ❌
+app.put('/subCategorias/:id_subcategoria', rotasSubCategorias.atualizarTodos)
+app.delete('/subCategorias/:id_subcategoria', rotasSubCategorias.deletar)
 
 // Rotas Contas
 app.get('/contas/filtrarConta', rotasContas.filtrarConta) // Da 200ok mas não retorna❗

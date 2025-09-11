@@ -20,7 +20,7 @@ class rotasContas{
 
     static async listar(req, res){
         try{
-            const contas = await BD.query("SELECT * FROM contas")
+            const contas = await BD.query("SELECT * FROM contas ORDER BY nome")
             return res.status(200).json(contas.rows)
         }catch(error){
             res.status(500).json({message:'Erro ao listar contas', error: error.message})

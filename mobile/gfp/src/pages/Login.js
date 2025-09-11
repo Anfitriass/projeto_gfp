@@ -65,7 +65,7 @@ const Login = ({ navigation }) => {
             }
 
         } catch (error) {
-            console.error('Erro ao realizar login:', error);
+            console.error('Erro ao realizar login:', error)
             alert(error.message);
             return;
         }

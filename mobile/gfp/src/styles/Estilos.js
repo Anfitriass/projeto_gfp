@@ -32,7 +32,7 @@ const Estilos = {
     },
     inputActive: {
         borderColor: corPrincipal,
-        backgroundColor: 'rgba(209, 206, 210, 0.29)',
+        backgroundColor: '#bf00ff',
     },
     inputIcon: {
         position: 'absolute',
@@ -66,7 +66,7 @@ const Estilos = {
     },
     conteudoHeader: {
         flex: 1,
-        backgroundColor: corSecundaria,
+        backgroundColor: '#d900ff',
     },
     conteudoCorpo:{
         flex: 1,
@@ -104,6 +104,64 @@ const Estilos = {
         padding: 10,
         backgroundColor: '#fff'
     },
+    modalFundo:{
+        flex:1,
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(1, 1, 1, 0.5)',
+    },
+    modalConteudo:{
+        backgroundColor: '#d900ff',
+        padding: 16,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25
+    },
+    modalTitulo:{
+        fontSize: 18,
+        color: '#fff',
+        marginBottom: 16
+    },
+    inputModal:{
+        backgroundColor: '#f6defa',
+        flex: 1,
+        padding: 8,
+        borderRadius: 8
+    },
+    modalBotoes:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 16
+    },
+    corBotao:{
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        margin: 8,
+        borderWidth: 2,
+        borderColor: '#fff'
+    },
+    iconeBotao: {
+        width: 40,
+        height: 40,
+        padding: 8,
+        backgroundColor: '#333',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    SeletorContainer:{
+        backgroundColor: '#1e1e1e',
+        padding: 16,
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16
+    },
+    listaModal:{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        gap: 8
+    }
+    
+    
     
 }
 

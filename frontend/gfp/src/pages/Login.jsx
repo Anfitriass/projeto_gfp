@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { UsuarioContext } from "../UsuarioContext"
 import styles from './Login.module.css';
-import logo from '../assets/logoCachorro.png';
+import logo from '../assets/Dogman.png';
 import { enderecoServidor } from '../utils'
 import { useNavigate } from 'react-router-dom';
 
@@ -9,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { MdEmail, MdLock, MdVisibility, MdVisibilityOff, MdBarChart, MdNotifications, MdTrendingUp, MdCheck } from 'react-icons/md';
 
 function Login() {
+  const {dadosUsuario, setDadosUsuario} = useContext(UsuarioContext);
+
   const [email, setEmail] = useState('coelho@gmail.com');
   const [senha, setSenha] = useState('4994');
   const [showPassword, setShowPassword] = useState(false);
@@ -38,6 +41,7 @@ function Login() {
       if (resposta.ok) {
         // Aqui você pode armazenar o token em um estado global ou AsyncStorage, se necessário
         localStorage.setItem('UsuarioLogado', JSON.stringify({...dados, lembrar}));
+        setDadosUsuario(dados); // Gravando os dados
         navigate("/principal")
       } else {
         throw new Error(dados.message || 'Erro ao fazer login');
@@ -58,7 +62,7 @@ function Login() {
       <header className={styles.header}>
         {/* Using MdTrendingUp as a placeholder for the logo */}
 
-        <img src={logo} alt="Logo" className={styles.logoIcon} style={{ width: '50px', height: '50px' }} />
+        <img src={logo} alt="Logo" className={styles.logoIcon} style={{ width: '70px', height: '70px' }} />
         <div>
           <h1 className={styles.appName}>GFP</h1>
           <p className={styles.appSubtitle}>Gestor Financeiro Pessoal</p>

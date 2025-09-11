@@ -28,7 +28,7 @@ class rotasSubCategorias{
         static async listarPorID(req, res){
         const { id_subcategoria } = req.params;
         try{
-            const subCategoria = await BD.query('SELECT * FROM subcategorias WHERE id_subcategoria = $1', [id_subcategoria])
+            const subCategoria = await BD.query('SELECT * FROM subcategorias WHERE id_categoria = $1', [id_subcategoria])
         res.status(200).json(subCategoria.rows);
         }catch(error){
             res.status(500).json({message: "Erro ao consultar sub categoria", error: error.message})
@@ -88,6 +88,30 @@ class rotasSubCategorias{
         
                 }catch(error){
                     res.status(500).json({message: "Erro ao atualizar sub categoria", error: error.message})
+                }
+            }
+
+            static async atualizarTodos(req, res){
+                const { id_subcategoria } = req.params
+                const {nome, id_categoria, gasto_fixo, cor, icone} = req.body
+        
+                try{
+                    const categoria = await BD.query('UPDATE subCategorias SET nome = $1, id_categoria = $2, gasto_fixo = $3, cor = $4, icone = $5 WHERE id_subcategoria = $6 RETURNING *',
+                        [ nome, id_categoria, gasto_fixo, cor, icone, id_subcategoria] // Comando SQL para atualizar o usuario
+                    )
+                    res.status(200).json(categoria.rows)
+                }catch(error){
+                    res.status(500).json({message: "Erro ao atualizar subcategoria", error: error.message})
+                }
+            }
+
+            static async deletar(req, res){
+                const { id_subcategoria } = req.params
+                try{
+                    const subCategoria = await BD.query('UPDATE subCategorias SET ativo = false WHERE id_subcategoria = $1', [id_subcategoria])
+                    return res.status(200).json({message: "Subcategoria deletado com sucesso"})
+                }catch(error){
+                    res.status(500).json({message:"Erro ao deletar subcategoria", error:error.message})
                 }
             }
 

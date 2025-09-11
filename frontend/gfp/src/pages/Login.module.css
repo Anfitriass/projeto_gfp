@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh; /* Full height */
-    background: linear-gradient(to bottom, #2c3e50, #3498db); /* Example gradient blue */
+    background: linear-gradient(to bottom, #006eff, #ffaa00f4); /* Example gradient blue */
     padding: 20px;
     box-sizing: border-box; /* Include padding in width/height calculation */
     font-family: sans-serif; /* Choose a suitable font */
@@ -142,7 +142,7 @@
   /* Forgot password link */
   .forgotPassword {
     font-size: 0.9em;
-    color: #2a6f97; /* Link blue color */
+    color: #21689f; /* Link blue color */
     text-decoration: none;
   }
   
@@ -154,7 +154,7 @@
   .submitButton {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(to right, #2a6f97, #1e4c7a); /* Button gradient */
+    background: linear-gradient(to right, #5dcae8, #0ac2f5); /* Button gradient */
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -168,7 +168,7 @@
   }
   
   .submitButton:hover {
-    background: linear-gradient(to right, #1e4c7a, #2a6f97); /* Darker gradient on hover */
+    background: linear-gradient(to right, #0095ff, #007bff); /* Darker gradient on hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
   
@@ -185,7 +185,7 @@
   }
   
   .signupLink {
-    color: #2a6f97; /* Link blue color */
+    color: #000000; /* Link blue color */
     font-weight: bold;
     text-decoration: none;
   }
