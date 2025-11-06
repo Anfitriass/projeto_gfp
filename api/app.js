@@ -1,7 +1,7 @@
 import express from 'express'
 import { testarConexao } from './db.js'
 import cors from 'cors'
-import rotasUsuarios, {autenticarToken} from './routes/rotasUsuarios.js'
+import rotasUsuarios, { autenticarToken } from './routes/rotasUsuarios.js'
 import rotasCategorias from './routes/rotasCategorias.js'
 import rotasSubCategorias from './routes/rotasSubCategorias.js'
 import rotasContas from './routes/rotasContas.js'
@@ -58,15 +58,16 @@ app.put('/contas/:id_conta', rotasContas.atualizarTodos) // ✅
 app.delete('/contas/:id_conta', rotasContas.deletar) // Da 200ok mas não deleta a conta❗
 
 // Rotas Transações
-app.post('/transacao/somarTransacoes', rotasTransacoes.somarTransacoes) // 
-app.get('/transacao/filtrarData', rotasTransacoes.filtrarPorData) // 
-app.get('/transacao/transacoesVencidas/:id_usuario', rotasTransacoes.transacoesVencidas) // 
-app.post('/transacao', rotasTransacoes.nova) // ✅
-// app.get('/transacao', rotasTransacoes.listar)
-// app.get('/transacao', rotasTransacoes.listarPorID)
-// app.patch('/transacao', rotasTransacoes.atualizar)
-// app.put('/transacao', rotasTransacoes.atualizarTodos)
-// app.delete('/transacao', rotasTransacoes.deletar)
+app.post('/transacoes/somarTransacoes', rotasTransacoes.somarTransacoes) // 
+app.get('/transacoes/filtrarData', rotasTransacoes.filtrarPorData) // 
+app.get('/transacoes/dadosDashboard', rotasTransacoes.dadosDashboard) // 
+app.get('/transacoes/transacoesVencidas/:id_usuario', rotasTransacoes.transacoesVencidas) // 
+app.post('/transacoes', rotasTransacoes.nova) // ✅
+app.get('/transacoes', rotasTransacoes.listar)
+app.get('/transacoes/:id_transacao', rotasTransacoes.listarTransacao)
+app.patch('/transacoes/:id_transacao', rotasTransacoes.atualizar)
+// app.put('/transacoes/:id_transacao', rotasTransacoes.atualizarTodos)
+app.delete('/transacoes/:id_transacao', rotasTransacoes.deletar)
 
 const porta = 3000
 app.listen(porta, () => {

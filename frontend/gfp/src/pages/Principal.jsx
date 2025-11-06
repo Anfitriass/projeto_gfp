@@ -5,6 +5,8 @@ import Contas from './Contas';
 import Categorias from './Categorias';
 import CadContas from './CadContas';
 import Dashboard from './Dashboard';
+import TransacaoModal from './TransacaoModal';
+import Transacoes from './Transacoes';
 import logo from '../assets/Dogman.png'
 import { MdAdd, MdCached, MdClose, MdCreditCard, MdGridView, MdLogout, MdMenu, MdOutlineLocalOffer, MdPeople } from 'react-icons/md';
 
@@ -12,6 +14,11 @@ export default function Principal() {
     const { dadosUsuario, setDadosUsuario, carregando } = useContext(UsuarioContext);
 
     const [menuAberto, setMenuAberto] = useState(false);
+    const [modalTransacaoAberto, setModalTransacaoAberto] = useState(false);
+
+    const fecharTransacaoModal = () => {
+        setModalTransacaoAberto(false)
+    }
 
     const navigate = useNavigate();
     const location = useLocation(); // Obter a rota atual
@@ -55,11 +62,11 @@ export default function Principal() {
                 </div>
                 <nav className='flex-1' >
                     <div className='px-4 lg:px-6 mb-2'>
-                        <Link to='/dashboard' onClick={() => setMenuAberto(false)} 
+                        <Link to='/dashboard' onClick={() => setMenuAberto(false)}
                             className={`flex items-center gap-2 p-3 rounded-lg transition-colors
                                     duration-200 ${location.pathname == '/dashboard' ?
-                                        'bg-cyan-500 text-white shadow-md' : 'hover:bg-cyan-700'
-                                    }
+                                    'bg-cyan-500 text-white shadow-md' : 'hover:bg-cyan-700'
+                                }
                                 `}
                         >
                             <MdGridView className='w-8 h-8' />
@@ -67,11 +74,11 @@ export default function Principal() {
                         </Link>
                     </div>
                     <div className='px-4 lg:px-6 mb-2'>
-                        <Link to='/transacoes' onClick={() => setMenuAberto(false)} 
+                        <Link to='/transacoes' onClick={() => setMenuAberto(false)}
                             className={`flex items-center gap-2 p-3 rounded-lg transition-colors
                                     duration-200 ${location.pathname == '/transacoes' ?
-                                        'bg-cyan-500 text-white shadow-md' : 'hover:bg-cyan-700'
-                                    }
+                                    'bg-cyan-500 text-white shadow-md' : 'hover:bg-cyan-700'
+                                }
                                 `}
                         >
                             <MdCached className='w-8 h-8' />
@@ -79,11 +86,11 @@ export default function Principal() {
                         </Link>
                     </div>
                     <div className='px-4 lg:px-6 mb-2'>
-                        <Link to='/contas' onClick={() => setMenuAberto(false)} 
+                        <Link to='/contas' onClick={() => setMenuAberto(false)}
                             className={`flex items-center gap-2 p-3 rounded-lg transition-colors
                                     duration-200 ${location.pathname == '/contas' ?
-                                        'bg-cyan-500 text-white shadow-md' : 'hover:bg-cyan-700'
-                                    }
+                                    'bg-cyan-500 text-white shadow-md' : 'hover:bg-cyan-700'
+                                }
                                 `}
                         >
                             <MdCreditCard className='w-8 h-8' />
@@ -91,11 +98,11 @@ export default function Principal() {
                         </Link>
                     </div>
                     <div className='px-4 lg:px-6 mb-2'>
-                        <Link to='/categorias' onClick={() => setMenuAberto(false)} 
+                        <Link to='/categorias' onClick={() => setMenuAberto(false)}
                             className={`flex items-center gap-2 p-3 rounded-lg transition-colors
                                     duration-200 ${location.pathname == '/categorias' ?
-                                        'bg-cyan-500 text-white shadow-md' : 'hover:bg-cyan-700'
-                                    }
+                                    'bg-cyan-500 text-white shadow-md' : 'hover:bg-cyan-700'
+                                }
                                 `}
                         >
                             <MdOutlineLocalOffer className='w-8 h-8' />
@@ -104,24 +111,24 @@ export default function Principal() {
                     </div>
                 </nav>
                 <div className='p-4 lg:p-6 border-t border-cyan-700 bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-3 px-4 rounded-lg m-4' >
-                    <button className='flex w-full items-center justify-center ' >
+                    <button className='flex w-full items-center justify-center' onClick={() => setModalTransacaoAberto(true)} >
                         <MdAdd className='w-8 h-8' />
                         <span className='md:hidden lg:block' >Nova Transação</span>
                     </button>
-                </div> 
-                    <div className='border-t border-cyan-700 pt-4' >
-                        <div className='flex items-center p-2' >
-                            <MdPeople className='w-10 h-10 p-2 bg-cyan-700 text-cyan-400 rounded-full' />
-                            <div className='ml-3 md:hidden lg:block' >
-                                <p className='font-bold text-white'> {dadosUsuario?.nome} </p>
-                                <p> {dadosUsuario?.email} </p>
-                            </div>
+                </div>
+                <div className='border-t border-cyan-700 pt-4' >
+                    <div className='flex items-center p-2' >
+                        <MdPeople className='w-10 h-10 p-2 bg-cyan-600 text-amber-500 rounded-full' />
+                        <div className='ml-3 md:hidden lg:block' >
+                            <p className='font-bold text-white'> {dadosUsuario?.nome} </p>
+                            <p> {dadosUsuario?.email} </p>
                         </div>
-                        <button className='flex gap-2 items-center w-full justify-center p-3 text-slate-300 ' onClick={botaoLogout} >
-                            <MdLogout className='w-5 h-5' />
-                            <span className='md:hidden lg:block' >Sair</span>
-                        </button>
                     </div>
+                    <button className='flex gap-2 items-center w-full justify-center p-3 text-slate-300 ' onClick={botaoLogout} >
+                        <MdLogout className='w-5 h-5' />
+                        <span className='md:hidden lg:block' >Sair</span>
+                    </button>
+                </div>
             </section>
             {/* Conteudo principal */}
             <section className='flex-1 p-4 text-gray-100 overflow-auto' >
@@ -136,14 +143,19 @@ export default function Principal() {
                 </header>
                 <main>
                     <Routes>
-                        <Route path='/' element={<Dashboard/>} />
-                        <Route path='/dashboard' element={<Dashboard/>} />
-                        <Route path='/contas' element={<Contas/>} />
-                        <Route path='/cadcontas' element={<CadContas/>} />
-                        <Route path='/categorias' element={<Categorias/>} />
+                        <Route path='/' element={<Dashboard />} />
+                        <Route path='/dashboard' element={<Dashboard />} />
+                        <Route path='/contas' element={<Contas />} />
+                        <Route path='/cadcontas' element={<CadContas />} />
+                        <Route path='/categorias' element={<Categorias />} />
+                        <Route path='/transacoes' element={<Transacoes />} />
                     </Routes>
                 </main>
             </section>
+            <TransacaoModal
+                modalAberto={modalTransacaoAberto}
+                fecharModal={fecharTransacaoModal}
+            />
         </div>
     );
 }

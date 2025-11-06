@@ -162,7 +162,7 @@ export default function Categorias() {
             <div className="bg-gray-50 p-4 mt-2 ml-10 rounded-lg border border-gray-200" >
                 <div className="flex justify-between items-center mb-3" >
                     <h4 className="font-bold text-gray-700" >Subcategorias de  {categoria.nome} </h4>
-                    <button className="bg-sky-600 px-3 py-1 rounded-md flex items-center" onClick={botaoNovaSubcategoria} >
+                    <button className="bg-cyan-500 px-3 py-1 rounded-md flex items-center" onClick={botaoNovaSubcategoria} >
                         <MdAdd className="h-5 w-5 mr-1" /> Nova subcategoria
                     </button>
                 </div>

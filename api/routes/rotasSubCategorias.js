@@ -28,7 +28,7 @@ class rotasSubCategorias{
         static async listarPorID(req, res){
         const { id_subcategoria } = req.params;
         try{
-            const subCategoria = await BD.query('SELECT * FROM subcategorias WHERE id_categoria = $1', [id_subcategoria])
+            const subCategoria = await BD.query('SELECT * FROM subcategorias WHERE id_categoria = $1 and ativo = true', [id_subcategoria])
         res.status(200).json(subCategoria.rows);
         }catch(error){
             res.status(500).json({message: "Erro ao consultar sub categoria", error: error.message})
